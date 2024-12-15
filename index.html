@@ -17,25 +17,22 @@
             background: #f4f4f9;
             color: #333;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
+            justify-content: space-between;
         }
         #editor, #output {
             width: 100%;
-            height: 100%;
+            flex: 1;
             padding: 2rem;
             font-size: 18px;
             border: none;
             outline: none;
             resize: none;
             overflow: auto;
-        }
-        #editor {
             background: white;
         }
         #output {
             display: none;
-            background: white;
         }
         .floating-btn {
             position: fixed;
@@ -58,6 +55,13 @@
         .floating-btn:hover {
             background: #0056b3;
         }
+        footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +70,10 @@
 <div id="output"></div>
 
 <button class="floating-btn" id="toggleBtn">🖋️</button>
+
+<footer>
+    Dibuat dengan ❤️ oleh GPT
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
