@@ -40,9 +40,9 @@
             right: 20px;
             width: 60px;
             height: 60px;
-            background: #007bff;
-            color: white;
-            border: none;
+            background: #ffffff;
+            color: #ffffff;
+            border: 2px solid #007bff;
             border-radius: 50%;
             font-size: 24px;
             cursor: pointer;
@@ -50,17 +50,31 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: background 0.3s;
+            transition: background 0.3s, color 0.3s, border 0.3s;
         }
         .floating-btn:hover {
-            background: #0056b3;
-        }
-        footer {
-            background-color: #007bff;
+            background: #ffffff;
             color: white;
+        }
+
+        footer {
+            background-color: #ffffff;
+            color: #007bff;
             text-align: center;
             padding: 1rem;
             font-size: 14px;
+            border-top: 2px solid #007bff;
+        }
+
+        /* Styling untuk nested list */
+        ul, ol {
+            padding-left: 20px;
+        }
+        ul ul, ol ol {
+            padding-left: 20px;
+        }
+        ul li, ol li {
+            margin: 5px 0;
         }
     </style>
 </head>
