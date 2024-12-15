@@ -5,74 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catatan Online</title>
     <style>
-        body {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            width: 100%;
             font-family: Arial, sans-serif;
             background: #f4f4f9;
             color: #333;
-            padding: 2rem;
-            max-width: 800px;
-            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        textarea {
+        #editor, #output {
             width: 100%;
-            height: 150px;
-            padding: 1rem;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 1rem;
+            height: 100%;
+            padding: 2rem;
+            font-size: 18px;
+            border: none;
+            outline: none;
             resize: none;
+            overflow: auto;
+        }
+        #editor {
+            background: white;
         }
         #output {
+            display: none;
             background: white;
-            padding: 2rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            min-height: 200px;
         }
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            font-size: 0.9rem;
-            color: #555;
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        .floating-btn:hover {
+            background: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h1>Catatan Online</h1>
 
-    <textarea id="noteInput" placeholder="Tulis catatan dengan Markdown..."></textarea>
-    <div id="output"></div>
+<textarea id="editor" placeholder="Tulis catatan dengan Markdown..."></textarea>
+<div id="output"></div>
 
-    <footer>
-        Dibuat dengan ❤️ menggunakan GitHub Pages
-    </footer>
+<button class="floating-btn" id="toggleBtn">🖋️</button>
 
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        const input = document.getElementById("noteInput");
-        const output = document.getElementById("output");
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const editor = document.getElementById("editor");
+    const output = document.getElementById("output");
+    const toggleBtn = document.getElementById("toggleBtn");
 
-        // Fungsi untuk menampilkan catatan dalam format Markdown
-        function updateOutput() {
-            const content = input.value;
-            output.innerHTML = marked.parse(content);
-            localStorage.setItem("markdownNote", content);
+    let isRendered = false;
+
+    // Fungsi untuk merender atau mengembalikan ke mode input
+    toggleBtn.addEventListener("click", () => {
+        if (!isRendered) {
+            output.innerHTML = marked.parse(editor.value);
+            editor.style.display = "none";
+            output.style.display = "block";
+            toggleBtn.innerHTML = "✏️";
+            isRendered = true;
+        } else {
+            editor.style.display = "block";
+            output.style.display = "none";
+            toggleBtn.innerHTML = "🖋️";
+            isRendered = false;
         }
+    });
 
-        // Update saat mengetik
-        input.addEventListener("input", updateOutput);
+    // Simpan catatan di localStorage
+    window.addEventListener("beforeunload", () => {
+        localStorage.setItem("markdownNote", editor.value);
+    });
 
-        // Muat catatan yang tersimpan
-        window.addEventListener("DOMContentLoaded", () => {
-            const savedNote = localStorage.getItem("markdownNote") || "";
-            input.value = savedNote;
-            updateOutput();
-        });
-    </script>
+    // Muat catatan yang tersimpan saat halaman dimuat
+    window.addEventListener("DOMContentLoaded", () => {
+        const savedNote = localStorage.getItem("markdownNote") || "";
+        editor.value = savedNote;
+    });
+</script>
+
 </body>
 </html>
