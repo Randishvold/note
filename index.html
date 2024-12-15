@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catatan Online</title>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         * {
             margin: 0;
@@ -36,15 +37,13 @@
         }
         .floating-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background: #ffffff;
-            color: #ffffff;
+            color: #007bff;
             border: 2px solid #007bff;
             border-radius: 50%;
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -53,10 +52,19 @@
             transition: background 0.3s, color 0.3s, border 0.3s;
         }
         .floating-btn:hover {
-            background: #ffffff;
+            background: #007bff;
             color: white;
         }
-
+        #toggleBtn {
+            bottom: 80px;
+            right: 20px;
+            position: fixed;
+        }
+        #copyBtn {
+            bottom: 20px;
+            right: 20px;
+            position: fixed;
+        }
         footer {
             background-color: #ffffff;
             color: #007bff;
@@ -65,17 +73,6 @@
             font-size: 14px;
             border-top: 2px solid #007bff;
         }
-
-        /* Styling untuk nested list */
-        ul, ol {
-            padding-left: 20px;
-        }
-        ul ul, ol ol {
-            padding-left: 20px;
-        }
-        ul li, ol li {
-            margin: 5px 0;
-        }
     </style>
 </head>
 <body>
@@ -83,7 +80,8 @@
 <textarea id="editor" placeholder="Tulis catatan dengan Markdown..."></textarea>
 <div id="output"></div>
 
-<button class="floating-btn" id="toggleBtn">🖋️</button>
+<button class="floating-btn" id="toggleBtn"><i class="fas fa-edit"></i></button>
+<button class="floating-btn" id="copyBtn" style="display: none;"><i class="fas fa-copy"></i></button>
 
 <footer>
     Dibuat dengan ❤️ oleh GPT
@@ -94,23 +92,36 @@
     const editor = document.getElementById("editor");
     const output = document.getElementById("output");
     const toggleBtn = document.getElementById("toggleBtn");
+    const copyBtn = document.getElementById("copyBtn");
 
     let isRendered = false;
 
-    // Fungsi untuk merender atau mengembalikan ke mode input
+    // Fungsi untuk merender atau kembali ke mode menulis
     toggleBtn.addEventListener("click", () => {
         if (!isRendered) {
             output.innerHTML = marked.parse(editor.value);
             editor.style.display = "none";
             output.style.display = "block";
-            toggleBtn.innerHTML = "✏️";
+            toggleBtn.innerHTML = '<i class="fas fa-book"></i>';
+            copyBtn.style.display = "flex";
             isRendered = true;
         } else {
             editor.style.display = "block";
             output.style.display = "none";
-            toggleBtn.innerHTML = "🖋️";
+            toggleBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            copyBtn.style.display = "none";
             isRendered = false;
         }
+    });
+
+    // Fungsi untuk menyalin teks ke clipboard
+    copyBtn.addEventListener("click", () => {
+        const text = output.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert("Teks berhasil disalin!");
+        }).catch(err => {
+            alert("Gagal menyalin teks!");
+        });
     });
 
     // Simpan catatan di localStorage
@@ -128,20 +139,21 @@
     let isKeyboardVisible = false;
 
     window.addEventListener('resize', () => {
-        // Jika tinggi viewport berkurang signifikan, kemungkinan keyboard terbuka
         if (window.innerHeight < 400) {
             isKeyboardVisible = true;
-            toggleBtn.style.display = "none"; // Sembunyikan tombol saat keyboard muncul
+            toggleBtn.style.display = "none"; 
+            copyBtn.style.display = "none"; 
         } else {
             isKeyboardVisible = false;
-            toggleBtn.style.display = "flex"; // Tampilkan tombol kembali saat keyboard tertutup
+            toggleBtn.style.display = "flex"; 
+            if (isRendered) copyBtn.style.display = "flex"; 
         }
     });
 
-    // Deteksi pergerakan halaman
     window.addEventListener('scroll', () => {
         if (!isKeyboardVisible) {
-            toggleBtn.style.display = "flex"; // Tampilkan tombol saat menggulir halaman ke bawah
+            toggleBtn.style.display = "flex"; 
+            if (isRendered) copyBtn.style.display = "flex"; 
         }
     });
 </script>
