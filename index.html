@@ -7,84 +7,72 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background: #f4f4f9;
             color: #333;
-            margin: 40px;
+            padding: 2rem;
             max-width: 800px;
             margin: auto;
         }
-        h1, h2 {
+        h1 {
             text-align: center;
+            margin-bottom: 2rem;
         }
-        .note {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 5px solid #007bff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        form {
-            margin-top: 20px;
-        }
-        textarea, input[type="submit"] {
+        textarea {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0;
+            height: 150px;
+            padding: 1rem;
             font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            resize: none;
+        }
+        #output {
+            background: white;
+            padding: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 200px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #555;
         }
     </style>
 </head>
 <body>
     <h1>Catatan Online</h1>
-    <h2>Tambah Catatan</h2>
-    <form id="noteForm">
-        <textarea id="noteInput" placeholder="Tulis catatanmu di sini..." rows="4" required></textarea>
-        <input type="submit" value="Simpan Catatan">
-    </form>
 
-    <h2>Daftar Catatan</h2>
-    <div id="notesList"></div>
+    <textarea id="noteInput" placeholder="Tulis catatan dengan Markdown..."></textarea>
+    <div id="output"></div>
 
+    <footer>
+        Dibuat dengan ❤️ menggunakan GitHub Pages
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        const form = document.getElementById("noteForm");
         const input = document.getElementById("noteInput");
-        const notesList = document.getElementById("notesList");
+        const output = document.getElementById("output");
 
-        // Fungsi untuk menampilkan catatan dari localStorage
-        function displayNotes() {
-            notesList.innerHTML = "";
-            const notes = JSON.parse(localStorage.getItem("notes")) || [];
-            notes.forEach((note, index) => {
-                const noteElement = document.createElement("div");
-                noteElement.className = "note";
-                noteElement.innerHTML = `
-                    <p>${note}</p>
-                    <button onclick="deleteNote(${index})">Hapus</button>
-                `;
-                notesList.appendChild(noteElement);
-            });
+        // Fungsi untuk menampilkan catatan dalam format Markdown
+        function updateOutput() {
+            const content = input.value;
+            output.innerHTML = marked.parse(content);
+            localStorage.setItem("markdownNote", content);
         }
 
-        // Tambah catatan baru
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const notes = JSON.parse(localStorage.getItem("notes")) || [];
-            notes.push(input.value);
-            localStorage.setItem("notes", JSON.stringify(notes));
-            input.value = "";
-            displayNotes();
+        // Update saat mengetik
+        input.addEventListener("input", updateOutput);
+
+        // Muat catatan yang tersimpan
+        window.addEventListener("DOMContentLoaded", () => {
+            const savedNote = localStorage.getItem("markdownNote") || "";
+            input.value = savedNote;
+            updateOutput();
         });
-
-        // Hapus catatan
-        function deleteNote(index) {
-            const notes = JSON.parse(localStorage.getItem("notes")) || [];
-            notes.splice(index, 1);
-            localStorage.setItem("notes", JSON.stringify(notes));
-            displayNotes();
-        }
-
-        // Tampilkan catatan saat halaman dimuat
-        displayNotes();
     </script>
 </body>
 </html>
