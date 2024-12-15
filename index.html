@@ -58,17 +58,6 @@
         .floating-btn:hover {
             background: #0056b3;
         }
-
-        /* Styling untuk nested list */
-        ul, ol {
-            padding-left: 20px;
-        }
-        ul ul, ol ol {
-            padding-left: 20px;
-        }
-        ul li, ol li {
-            margin: 5px 0;
-        }
     </style>
 </head>
 <body>
@@ -111,6 +100,27 @@
     window.addEventListener("DOMContentLoaded", () => {
         const savedNote = localStorage.getItem("markdownNote") || "";
         editor.value = savedNote;
+    });
+
+    // Deteksi perubahan tampilan keyboard dan scroll
+    let isKeyboardVisible = false;
+
+    window.addEventListener('resize', () => {
+        // Jika tinggi viewport berkurang signifikan, kemungkinan keyboard terbuka
+        if (window.innerHeight < 400) {
+            isKeyboardVisible = true;
+            toggleBtn.style.display = "none"; // Sembunyikan tombol saat keyboard muncul
+        } else {
+            isKeyboardVisible = false;
+            toggleBtn.style.display = "flex"; // Tampilkan tombol kembali saat keyboard tertutup
+        }
+    });
+
+    // Deteksi pergerakan halaman
+    window.addEventListener('scroll', () => {
+        if (!isKeyboardVisible) {
+            toggleBtn.style.display = "flex"; // Tampilkan tombol saat menggulir halaman ke bawah
+        }
     });
 </script>
 
