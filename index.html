@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Online</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 40px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .note {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #007bff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        form {
+            margin-top: 20px;
+        }
+        textarea, input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Catatan Online</h1>
+    <h2>Tambah Catatan</h2>
+    <form id="noteForm">
+        <textarea id="noteInput" placeholder="Tulis catatanmu di sini..." rows="4" required></textarea>
+        <input type="submit" value="Simpan Catatan">
+    </form>
+
+    <h2>Daftar Catatan</h2>
+    <div id="notesList"></div>
+
+    <script>
+        const form = document.getElementById("noteForm");
+        const input = document.getElementById("noteInput");
+        const notesList = document.getElementById("notesList");
+
+        // Fungsi untuk menampilkan catatan dari localStorage
+        function displayNotes() {
+            notesList.innerHTML = "";
+            const notes = JSON.parse(localStorage.getItem("notes")) || [];
+            notes.forEach((note, index) => {
+                const noteElement = document.createElement("div");
+                noteElement.className = "note";
+                noteElement.innerHTML = `
+                    <p>${note}</p>
+                    <button onclick="deleteNote(${index})">Hapus</button>
+                `;
+                notesList.appendChild(noteElement);
+            });
+        }
+
+        // Tambah catatan baru
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const notes = JSON.parse(localStorage.getItem("notes")) || [];
+            notes.push(input.value);
+            localStorage.setItem("notes", JSON.stringify(notes));
+            input.value = "";
+            displayNotes();
+        });
+
+        // Hapus catatan
+        function deleteNote(index) {
+            const notes = JSON.parse(localStorage.getItem("notes")) || [];
+            notes.splice(index, 1);
+            localStorage.setItem("notes", JSON.stringify(notes));
+            displayNotes();
+        }
+
+        // Tampilkan catatan saat halaman dimuat
+        displayNotes();
+    </script>
+</body>
+</html>
