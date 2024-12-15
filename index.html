@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catatan Online</title>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
     <style>
         * {
             margin: 0;
@@ -35,6 +38,7 @@
         #output {
             display: none;
         }
+
         .floating-btn {
             position: fixed;
             width: 50px;
@@ -43,7 +47,7 @@
             color: #007bff;
             border: 2px solid #007bff;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             justify-content: center;
@@ -58,13 +62,13 @@
         #toggleBtn {
             bottom: 80px;
             right: 20px;
-            position: fixed;
         }
         #copyBtn {
             bottom: 20px;
             right: 20px;
-            position: fixed;
+            display: none;
         }
+
         footer {
             background-color: #ffffff;
             color: #007bff;
@@ -73,6 +77,17 @@
             font-size: 14px;
             border-top: 2px solid #007bff;
         }
+
+        /* Styling untuk nested list */
+        ul, ol {
+            padding-left: 20px;
+        }
+        ul ul, ol ol {
+            padding-left: 20px;
+        }
+        ul li, ol li {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -80,8 +95,9 @@
 <textarea id="editor" placeholder="Tulis catatan dengan Markdown..."></textarea>
 <div id="output"></div>
 
-<button class="floating-btn" id="toggleBtn"><i class="fas fa-edit"></i></button>
-<button class="floating-btn" id="copyBtn" style="display: none;"><i class="fas fa-copy"></i></button>
+<!-- Tombol Melayang -->
+<button class="floating-btn" id="toggleBtn"><i class="bi bi-book"></i></button>
+<button class="floating-btn" id="copyBtn"><i class="bi bi-clipboard"></i></button>
 
 <footer>
     Dibuat dengan ❤️ oleh GPT
@@ -102,26 +118,28 @@
             output.innerHTML = marked.parse(editor.value);
             editor.style.display = "none";
             output.style.display = "block";
-            toggleBtn.innerHTML = '<i class="fas fa-book"></i>';
+            toggleBtn.innerHTML = '<i class="bi bi-pencil-square"></i>';
             copyBtn.style.display = "flex";
             isRendered = true;
         } else {
             editor.style.display = "block";
             output.style.display = "none";
-            toggleBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            toggleBtn.innerHTML = '<i class="bi bi-book"></i>';
             copyBtn.style.display = "none";
             isRendered = false;
         }
     });
 
-    // Fungsi untuk menyalin teks ke clipboard
+    // Fungsi untuk menyalin teks seperti yang terlihat di mode baca
     copyBtn.addEventListener("click", () => {
-        const text = output.innerText;
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Teks berhasil disalin!");
-        }).catch(err => {
-            alert("Gagal menyalin teks!");
-        });
+      // Ambil teks yang terlihat seperti di mode baca
+      const textToCopy = output.innerText.trim();
+      
+      navigator.clipboard.writeText(textToCopy).then(() => {
+          alert("Teks berhasil disalin sesuai dengan hasil render!");
+      }).catch(err => {
+          alert("Gagal menyalin teks!");
+      });
     });
 
     // Simpan catatan di localStorage
