@@ -78,8 +78,9 @@
             right: 20px;
         }
         #clearBtn {
-            bottom: 260px;
+            bottom: 140px;
             right: 20px;
+            display: none;
         }
 
         footer {
@@ -193,6 +194,7 @@
             toggleBtn.innerHTML = '<i class="bi bi-pencil-square"></i>';
             copyBtn.style.display = "flex";
             exportBtn.style.display = "flex";
+            clearBtn.style.display = "none"; // Sembunyikan tombol clear saat mode baca
             isRendered = true;
         } else {
             editor.style.display = "block";
@@ -200,6 +202,7 @@
             toggleBtn.innerHTML = '<i class="bi bi-book"></i>';
             copyBtn.style.display = "none";
             exportBtn.style.display = "none";
+            clearBtn.style.display = "flex"; // Tampilkan tombol clear saat mode tulis
             isRendered = false;
         }
     });
@@ -233,12 +236,9 @@
 
     // Fungsi untuk menghapus semua teks di area input
     clearBtn.addEventListener("click", () => {
-        if (editor.value.trim() !== "") {
-            const confirmClear = confirm("Apakah Anda yakin ingin menghapus semua teks?");
-            if (confirmClear) {
-                editor.value = "";
-                addToHistory(""); // Reset history
-            }
+        if (confirm("Apakah Anda yakin ingin menghapus semua teks?")) {
+            editor.value = "";
+            addToHistory(""); // Reset history
         }
     });
 
@@ -252,6 +252,9 @@
         const savedNote = localStorage.getItem("markdownNote") || "";
         editor.value = savedNote;
         addToHistory(savedNote);
+
+        // Tampilkan tombol clear saat aplikasi baru dibuka di mode tulis
+        clearBtn.style.display = "flex";
     });
 
     // Deteksi perubahan tampilan keyboard dan scroll
@@ -271,9 +274,11 @@
             if (isRendered) {
                 copyBtn.style.display = "flex"; 
                 exportBtn.style.display = "flex"; 
+                clearBtn.style.display = "none"; // Sembunyikan tombol clear saat mode baca
+            } else {
+                clearBtn.style.display = "flex"; // Tampilkan tombol clear saat mode tulis
             }
             themeBtn.style.display = "flex"; 
-            clearBtn.style.display = "flex"; 
         }
     });
 
@@ -283,9 +288,11 @@
             if (isRendered) {
                 copyBtn.style.display = "flex"; 
                 exportBtn.style.display = "flex"; 
+                clearBtn.style.display = "none"; // Sembunyikan tombol clear saat mode baca
+            } else {
+                clearBtn.style.display = "flex"; // Tampilkan tombol clear saat mode tulis
             }
             themeBtn.style.display = "flex"; 
-            clearBtn.style.display = "flex"; 
         }
     });
 
