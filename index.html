@@ -165,8 +165,8 @@
     let history = [];
     let historyIndex = -1;
 
-    // Inisialisasi markdown-it
-    const md = window.markdownit();
+    // Inisialisasi markdown-it dengan fitur breaks diaktifkan
+    const md = window.markdownit({ breaks: true });
 
     // Fungsi untuk menambahkan perubahan ke history
     function addToHistory(text) {
